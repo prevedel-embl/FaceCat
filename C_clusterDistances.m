@@ -10,6 +10,7 @@ for vidOutput=1:length(dist_files)
     dist = dist.cossim_hogs;
     cutoff = quantile(boot.avg_distance, 0.95);
     stereotypedFrames = extractStereotyped(dist, cutoff);
+    stereotypedFrames = thresholdDuration(stereotypedFrames);
     save(strcat('stereotyped_frames_N#_', num2str(ceil(vidOutput/2)), '.mat'), ...
                 'stereo typedFrames')
 end
