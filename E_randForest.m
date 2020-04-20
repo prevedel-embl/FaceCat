@@ -1,6 +1,8 @@
-function randForest(batchNum, vidReader, nIter, ...
+function randForest(batchNum, vidReader, ...
         laserSwitchOn_idx, laserSwitchOff_idx, cropRangeY, cropRangeX)
+    %% Train a random forest classifier
     load(strcat('stereotyped_frames_N#_', num2str(batchNum), '.mat'));
+    % Load uninitialized variables
     if ~exist('vidReader', 'var')
         csv_path = 'WIN_20200403_14_10_07_Pro.csv';
         video_path='Y:/members/Wiessalla/Data/Data_raw/20200403/KLS-61896/WIN_20200403_14_10_07_Pro.mp4';   
@@ -13,7 +15,9 @@ function randForest(batchNum, vidReader, nIter, ...
     end
     range_idx = laserSwitchOn_idx:laserSwitchOff_idx;
     nIter = ceil(0.15*numel(range_idx));
+    % Randomly select 15% of the frames within the recording epoch
     rand_idcs = range_idx(randperm(numel(range_idx), nIter));    
+    % Initialize array to store the HOG vectors resulting from these frames
     rand_hog = []; 
     for i=1:nIter
         rand_frameIter = read(vidReader, rand_idcs(nIter));
@@ -21,7 +25,8 @@ function randForest(batchNum, vidReader, nIter, ...
         rand_hog_vecIter = extractHOGFeatures(rand_frameIter, 'BlockSize', [32 32], 'NumBins', 8, ...
                                 'BlockSize', [1 1]);
         rand_hog(nIter, :)  = rand_hog_vecIter;
-    end  
+    end
+    % Train the classifier
     predictor = fitctree(rand_hog, stereotypedFrames(rand_idcs-laserSwitchOn_idx), 'MaxNumCategories', length(unique(stereotypedFrames)));
     save(strcat('trained_predictor_batch#_', num2str(batchNum), '.mat'), 'predictor', 'rand_idcs')
     
