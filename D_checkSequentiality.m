@@ -3,6 +3,7 @@ function D_checkSequentiality(directory)
     for i=1:numBatches
         disp(strcat('loading stereotyped_frames_N#_', num2str(i), '.mat'))
         load(strcat(strcat(directory, '/stereotyped_frames_N#_', num2str(i), '.mat')))
+        stereotypedFrames(isnan(stereotypedFrames))=0;
         change = ischange(stereotypedFrames);
         change = logical(change);
         change = ~change;

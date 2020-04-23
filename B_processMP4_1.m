@@ -9,10 +9,14 @@ function processMP4_1(video_path, output_folder)
 % SET RUNTIME VARIABLES
     cropRangeY = 83:464;
     cropRangeX = 297:548;
-    csv_path = 'Y:\members\Wiessalla\Code\Convert_Videos\WIN_20200414_15_37_31_Pro.csv';
+% The csv_path needs to be set to the file of the grayscale value
+% measurement of the mouse eye as provided by ImageJ
+    csv_path = 'Y:\members\Wiessalla\Code\Convert_Videos\M1_20200414_KLS-61899_File5\M1_20200414_KLS-61899_File5.csv';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     [laserSwitchOn_idcs, laserSwitchOff_idcs] = extractRecordedFramesIdcs(csv_path);
 
+    % batchNum means the number of the recording epoch within a video (i.e.
+    % a laser on period)
     for batchNum=1:length(laserSwitchOn_idcs)
         laserSwitchOn_idx = laserSwitchOn_idcs(batchNum);
         laserSwitchOff_idx = laserSwitchOff_idcs(batchNum);

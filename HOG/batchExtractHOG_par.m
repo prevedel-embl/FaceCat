@@ -6,7 +6,7 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
     [number_dataChunks, numFrames] = separateVideo(vidReader, size_dataChunks, ...
                             laserSwitchOn_idx, laserSwitchOff_idx, cropRangeY, cropRangeX);
     lenChunk = floor(numFrames/number_dataChunks);
-    
+    % Load only these chunks of 2GB size into memory, one at a time
     for N=1:number_dataChunks
         disp(strcat('Processing chunk ', num2str(N), ' out of_ ', num2str(number_dataChunks)));
         frameRangeLO = 1;
@@ -17,6 +17,7 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
         
         hog_ChunkN = [];
         frame = frameRangeLO;
+        % read the frames and convert them into HOG vectors
         parfor frame = frameRangeLO:frameRangeHI
             img = read(vidReader, frame);
             img = grayCrop(img, cropRangeY, cropRangeX);
@@ -26,11 +27,13 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
         end
         cossim_hogs = pdist(hog_ChunkN, 'cosine');
         nIter = 10000;
+        % Get the randomized distribution
         disp(strcat('Calculating bootstrap for chunk ', num2str(N)));
         avg_distance =  boot(vidReader, nIter, ...
                 laserSwitchOn_idx, laserSwitchOff_idx, cropRangeY, cropRangeX);
         
-        
+        % Read all chunks following the one loaded above to compare them to
+        % that one
         for M = N+1:number_dataChunks
             frameRangeLO = frameRangeHI+1;
             frameRangeHI = lenChunk*M + 1;
@@ -64,6 +67,7 @@ end
 
 function [number_dataChunks, numFrames] = separateVideo(vidReader, size_dataChunks, ...
                                 laserSwitchOn_idx, laserSwitchOff_idx, cropRangeY, cropRangeX)
+%% Estimate in how many 2GB chunks the video needs to be separated       
         frame1 = read(vidReader, 1);
         frame1 = grayCrop(frame1, cropRangeY, cropRangeX);
         hog_vec = extractHOGFeatures(frame1, 'BlockSize', [32 32], 'NumBins', 8, ...
