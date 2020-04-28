@@ -1,7 +1,9 @@
-function [laserSwitchOn_idcs, laserSwitchOff_idcs] = extractRecordedFramesIdcs(csv_path)
+function [laserSwitchOn_idcs, laserSwitchOff_idcs] = extractRecordedFramesIdcs(laserOn)
     % Convert the gray value array recorded from the Mouse eye to a binary one
-    laserOn = readtable(csv_path);
-    laserOn = table2array(laserOn(:,2));
+            % Not necessary anymore: Input is an array when using
+            % measureGrayValue
+            %     laserOn = readtable(csv_path);
+            %     laserOn = table2array(laserOn(:,2));
     laserOn(laserOn < 200) = 0;
     laserOn(laserOn >= 200) = 1;
     

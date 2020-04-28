@@ -13,7 +13,10 @@ function B_processMP4_1(video_path, csv_path, output_folder)
 % measurement of the mouse eye as provided by ImageJ
 %    csv_path = 'Y:\members\Wiessalla\Code\Convert_Videos\M1_20200414_KLS-61899_File5\M1_20200414_KLS-61899_File5.csv';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
-    [laserSwitchOn_idcs, laserSwitchOff_idcs] = extractRecordedFramesIdcs(csv_path);
+    % Measure the grayscale value of the eye to determine laser activity
+    grayValue = measureGrayValue(video_path);
+
+    [laserSwitchOn_idcs, laserSwitchOff_idcs] = extractRecordedFramesIdcs(grayValue);
 
     % batchNum means the number of the recording epoch within a video (i.e.
     % a laser on period)
