@@ -1,7 +1,7 @@
 function avg_distance = boot(vidReader, nIter, ...
         laserSwitchOn_idx, laserSwitchOff_idx, cropRangeY, cropRangeX)
     avg_distance = zeros(nIter, 1);
-    for i=1:nIter
+    parfor i=1:nIter
         range_idcs = laserSwitchOn_idx:laserSwitchOff_idx;
         rand_idcs = range_idcs(randperm(numel(range_idcs), 2));
         rand_frame1 = read(vidReader, rand_idcs(1));
