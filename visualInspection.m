@@ -16,7 +16,7 @@ function behavior_timepoints = visualInspection(cossim_hogs, avg_distance, perce
     % Display the detected steps in the graph and save corresponding
     % timepoints
     figure
-    findchangepts(cumulativeIntegral, 'MaxNumChanges', 5)
+    findchangepts(cumulativeIntegral, 'MaxNumChanges', 10)
     behavior_timepoints = findchangepts(cumulativeIntegral, 'MaxNumChanges', 10);
     title(strcat('Cluster change rate, 10 biggest changes, cutoff=', num2str(percent_quant)))
     xticks(behavior_timepoints)
