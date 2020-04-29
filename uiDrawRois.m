@@ -8,12 +8,13 @@ function [pos_snout, pos_eye] = uiDrawRois(video_path)
     % Let user draw rois for snout and eye
     % uialert(fig,'Select ROI for the snout/nose position, confirm with double-click on ROI', ...
     %             '', 'Icon', '')
-    roi = drawrectangle('Label', 'Snout Position', 'LineWidth', 1)
-    pos_snout = customWait(roi)
+    roi = drawrectangle('Label', 'Snout Position', 'LineWidth', 1, ...
+                            'Position', [297, 83, 251, 381]);
+    pos_snout = customWait(roi);
     % uialert(fig,'Select ROI for the snout/nose position, confirm with double-click on ROI', ...
     %             '', 'Icon', '')
-    roi2 = drawrectangle('Label', 'Eye Center','LineWidth', 1, 'Color', [1 0 0])
-    pos_eye = customWait(roi2)
+    roi2 = drawrectangle('Label', 'Eye Center','LineWidth', 1, 'Color', [1 0 0]);
+    pos_eye = customWait(roi2);
         % Close open figures
     close all
 end
