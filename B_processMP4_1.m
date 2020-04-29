@@ -24,7 +24,7 @@ function B_processMP4_1(video_path, output_folder)
         laserSwitchOff_idx = laserSwitchOff_idcs(batchNum);
         % batch extract should also do image registration if desired
         batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, ...
-            batchNum, cropRangeY, cropRangeX);
+            batchNum, pos_snout);
     end
     
     C_clusterDistances(output_folder);
