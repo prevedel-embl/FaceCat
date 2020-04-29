@@ -1,7 +1,10 @@
 function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, ...
             batchNum, pos_snout)
     vidReader = VideoReader(video_path);
-% Get estimated bytesize of the whole vidoe in HOGs
+    % Extract File Name, for savename generation
+    filename = regexp(video_path, '[/\\](\w+)\.', 'tokens');
+    filename = filename{1}{1};
+    % Get estimated bytesize of the whole vidoe in HOGs
     size_dataChunks = 2000000000;
     [number_dataChunks, numFrames] = separateVideo(vidReader, size_dataChunks, ...
                             laserSwitchOn_idx, laserSwitchOff_idx, pos_snout);
@@ -59,8 +62,8 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
             cossim_hogs = [cossim_hogs; cossim_tmp];
         end
         disp(strcat('Saving results for chunk ', num2str(N)));
-        save(strcat('Cos2-dist_Vid#_', num2str(batchNum), '_N#_', num2str(N), '.mat'), 'cossim_hogs', '-v7.3');
-        save(strcat('Avg_dist#_', num2str(batchNum), '_N#_', num2str(N), '.mat'), 'avg_distance', '-v7.3');
+        save(strcat('Cos2-dist_Vid#_', num2str(batchNum), '_N#_', num2str(N), '_', filename, '.mat'), 'cossim_hogs', '-v7.3');
+        save(strcat('Avg_dist#_', num2str(batchNum), '_N#_', num2str(N), '_', filename, '.mat'), 'avg_distance', '-v7.3');
      %   clear cossim_hogs
     end
 end
