@@ -19,7 +19,7 @@ function B_processMP4_1(video_path, output_folder)
 
     % batchNum means the number of the recording epoch within a video (i.e.
     % a laser on period)
-        for batchNum=1:length(laserSwitchOn_idcs)
+    for batchNum=1:length(laserSwitchOn_idcs)
         laserSwitchOn_idx = laserSwitchOn_idcs(batchNum);
         laserSwitchOff_idx = laserSwitchOff_idcs(batchNum);
         % batch extract should also do image registration if desired
