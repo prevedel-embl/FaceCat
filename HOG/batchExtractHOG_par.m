@@ -1,10 +1,10 @@
 function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, ...
-            batchNum, cropRangeY, cropRangeX)
+            batchNum, pos_snout)
     vidReader = VideoReader(video_path);
 % Get estimated bytesize of the whole vidoe in HOGs
     size_dataChunks = 2000000000;
     [number_dataChunks, numFrames] = separateVideo(vidReader, size_dataChunks, ...
-                            laserSwitchOn_idx, laserSwitchOff_idx, cropRangeY, cropRangeX);
+                            laserSwitchOn_idx, laserSwitchOff_idx, pos_snout);
     lenChunk = floor(numFrames/number_dataChunks);
     % Load only these chunks of 2GB size into memory, one at a time
     for N=1:number_dataChunks
@@ -20,7 +20,7 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
         % read the frames and convert them into HOG vectors
         parfor frame = frameRangeLO:frameRangeHI
             img = read(vidReader, frame);
-            img = grayCrop(img, cropRangeY, cropRangeX);
+            img = grayCrop(img, pos_snout);
             hog_vec = extractHOGFeatures(img, 'BlockSize', [32 32], 'NumBins', 8, ...
                                 'BlockSize', [1 1]);
             hog_ChunkN(frame, :) = hog_vec;
@@ -30,7 +30,7 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
         % Get the randomized distribution
         disp(strcat('Calculating bootstrap for chunk ', num2str(N)));
         avg_distance =  boot(vidReader, nIter, ...
-                laserSwitchOn_idx, laserSwitchOff_idx, cropRangeY, cropRangeX);
+                laserSwitchOn_idx, laserSwitchOff_idx, pos_snout);
         
         % Read all chunks following the one loaded above to compare them to
         % that one
@@ -46,7 +46,7 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
             hog_ChunkM = [];
             parfor frame = frameRangeLO:frameRangeHI
                 img = read(vidReader, frame);
-                img = grayCrop(img, cropRangeY, cropRangeX);
+                img = grayCrop(img, pos_snout);
                 hog_vec = extractHOGFeatures(img, 'BlockSize', [32 32], 'NumBins', 8, ...
                                     'BlockSize', [1 1]);
                 hog_ChunkM(frame) = hog_vec;
@@ -66,10 +66,10 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
 end
 
 function [number_dataChunks, numFrames] = separateVideo(vidReader, size_dataChunks, ...
-                                laserSwitchOn_idx, laserSwitchOff_idx, cropRangeY, cropRangeX)
+                                laserSwitchOn_idx, laserSwitchOff_idx, pos_snout)
 %% Estimate in how many 2GB chunks the video needs to be separated       
         frame1 = read(vidReader, 1);
-        frame1 = grayCrop(frame1, cropRangeY, cropRangeX);
+        frame1 = grayCrop(frame1, pos_snout);
         hog_vec = extractHOGFeatures(frame1, 'BlockSize', [32 32], 'NumBins', 8, ...
                             'BlockSize', [1 1]);
         hog1_byteSize = whos('hog_vec').bytes;

@@ -1,4 +1,4 @@
-function B_processMP4_1(video_path, csv_path, output_folder)
+function B_processMP4_1(video_path, output_folder)
 %     video_path = strcat('choose=', video_path);
 %     system(strcat('ImageJ-win64 --headless -macro ./2020-04-07_extract_laser_pattern.ijm ', video_path, ' ', output_path), '-echo')
     %run headless fiji macro
@@ -7,8 +7,7 @@ function B_processMP4_1(video_path, csv_path, output_folder)
     end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SET RUNTIME VARIABLES
-    cropRangeY = 83:464;
-    cropRangeX = 297:548;
+    [pos_snout, pos_eye] = uiDrawRois(video_path)
 % The csv_path needs to be set to the file of the grayscale value
 % measurement of the mouse eye as provided by ImageJ
 %    csv_path = 'Y:\members\Wiessalla\Code\Convert_Videos\M1_20200414_KLS-61899_File5\M1_20200414_KLS-61899_File5.csv';

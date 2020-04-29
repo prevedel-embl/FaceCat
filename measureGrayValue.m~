@@ -1,10 +1,10 @@
-function grayValue = measureGrayValue(video_path, pos_eye)
+function grayValue = measureGrayValue(video_path)
     tic
     vidReader = VideoReader(video_path);
     grayValue = [];
     while hasFrame(vidReader)
         current_frame = readFrame(vidReader);
-        eyeArea = grayCrop(current_frame, pos_eye)
+        eyeArea = grayCrop(pos_eye)
         tmp = regionprops(eyeArea, eyeArea, 'MaxIntensity');
         tmp = struct2cell(tmp);
         % find empty cells
