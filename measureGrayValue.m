@@ -4,7 +4,7 @@ function grayValue = measureGrayValue(video_path, pos_eye)
     grayValue = [];
     while hasFrame(vidReader)
         current_frame = readFrame(vidReader);
-        eyeArea = grayCrop(current_frame, pos_eye)
+        eyeArea = grayCrop(current_frame, pos_eye);
         tmp = regionprops(eyeArea, eyeArea, 'MaxIntensity');
         tmp = struct2cell(tmp);
         % find empty cells

@@ -13,7 +13,7 @@ function B_processMP4_1(video_path, output_folder)
 %    csv_path = 'Y:\members\Wiessalla\Code\Convert_Videos\M1_20200414_KLS-61899_File5\M1_20200414_KLS-61899_File5.csv';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     % Measure the grayscale value of the eye to determine laser activity
-    grayValue = measureGrayValue(video_path);
+    grayValue = measureGrayValue(video_path, pos_eye);
 
     [laserSwitchOn_idcs, laserSwitchOff_idcs] = extractRecordedFramesIdcs(grayValue);
 
