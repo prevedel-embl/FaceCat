@@ -24,7 +24,7 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
         parfor frame = frameRangeLO:frameRangeHI
             img = read(vidReader, frame);
             img = grayCrop(img, pos_snout);
-            hog_vec = extractHOGFeatures(img, 'BlockSize', [32 32], 'NumBins', 8, ...
+            hog_vec = extractHOGFeatures(img, 'CellSize', [32 32], 'NumBins', 8, ...
                                 'BlockSize', [1 1]);
             hog_ChunkN(frame, :) = hog_vec;
         end
@@ -50,7 +50,7 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
             parfor frame = frameRangeLO:frameRangeHI
                 img = read(vidReader, frame);
                 img = grayCrop(img, pos_snout);
-                hog_vec = extractHOGFeatures(img, 'BlockSize', [32 32], 'NumBins', 8, ...
+                hog_vec = extractHOGFeatures(img, 'CellSize', [32 32], 'NumBins', 8, ...
                                     'BlockSize', [1 1]);
                 hog_ChunkM(frame) = hog_vec;
             end
@@ -73,7 +73,7 @@ function [number_dataChunks, numFrames] = separateVideo(vidReader, size_dataChun
 %% Estimate in how many 2GB chunks the video needs to be separated       
         frame1 = read(vidReader, 1);
         frame1 = grayCrop(frame1, pos_snout);
-        hog_vec = extractHOGFeatures(frame1, 'BlockSize', [32 32], 'NumBins', 8, ...
+        hog_vec = extractHOGFeatures(frame1, 'CellSize', [32 32], 'NumBins', 8, ...
                             'BlockSize', [1 1]);
         hog1_byteSize = whos('hog_vec').bytes;
         numFrames = length(laserSwitchOn_idx:laserSwitchOff_idx);
