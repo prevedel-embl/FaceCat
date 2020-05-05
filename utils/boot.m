@@ -1,5 +1,7 @@
 function avg_distance = boot(vidReader, nIter, ...
         laserSwitchOn_idx, laserSwitchOff_idx, pos_crop)
+%% Create a random sample distribution by measuring the cosine distance between two randomly selected vecotrs n times
+
     avg_distance = zeros(nIter, 1);
     parfor i=1:nIter
         range_idcs = laserSwitchOn_idx:laserSwitchOff_idx;
