@@ -2,8 +2,13 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
             batchNum, pos_snout)
     vidReader = VideoReader(video_path);
     % Extract File Name, for savename generation
-    filename = regexp(video_path, '[/\\](\w+)\.', 'tokens');
-    filename = filename{1}{1};
+    try
+        filename = regexp(video_path, '[/\\](\w+)\.', 'tokens');
+        filename = filename{1}{1};
+    catch
+        disp('Remove any special characters from the file name');
+        keyboard
+    end
     % Get estimated bytesize of the whole vidoe in HOGs
     size_dataChunks = 2000000000;
     [number_dataChunks, numFrames] = separateVideo(vidReader, size_dataChunks, ...
