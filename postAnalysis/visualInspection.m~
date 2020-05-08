@@ -7,13 +7,14 @@ function [stereotypedFrames, cumulativeIntegral] = visualInspection(cossim_hogs,
     stereotypedFrames = cluster(links, 'MaxClust', percent_quant);
     % Count the number of cluster assignment changes within 0.25s sliding
     % winwow
-    amountOfChange = detectClusterChangesStep(stereotypedFrames);
+%     amountOfChange = detectClusterChangesStep(stereotypedFrames);
+  amountOfChange = detectClusterChangesStep(stereotypedFrames);
     % Cumulative plot indicates areas with high change rate as steps
-    cumulativeIntegral = cumtrapz(amountOfChange);
+%     cumulativeIntegral = cumtrapz(amountOfChange);
     % Display the raw data
-%     figure
-%     area(amountOfChange)
-%     title(strcat('Cluster changes at timepoint x, cutoff=', num2str(percent_quant)))
+    figure
+    area(amountOfChange)
+    title(strcat('Cluster changes at timepoint x, cutoff=', num2str(percent_quant)))
     % Display the detected steps in the graph and save corresponding
     % timepoints
     figure
