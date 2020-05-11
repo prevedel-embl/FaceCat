@@ -15,16 +15,15 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
                             laserSwitchOn_idx, laserSwitchOff_idx, pos_snout);
     lenChunk = floor(numFrames/number_dataChunks);
     % Load only these chunks of 2GB size into memory, one at a time
-    for N=1:number_dataChunks
+    parfor N=1:number_dataChunks
         disp(strcat('Processing chunk ', num2str(N), ' out of_ ', num2str(number_dataChunks)));
-        frameRangeLO = 1;
-        frameRangeHI = lenChunk*N + 1;
+        frameRangeLO = laserSwitchOn_idx;
+        frameRangeHI = laserSwitchOff_idx;
         if frameRangeHI > numFrames
             frameRangeHI = numFrames;
         end
         
         hog_ChunkN = [];
-        frame = frameRangeLO;
         % read the frames and convert them into HOG vectors
         parfor frame = frameRangeLO:frameRangeHI
             img = read(vidReader, frame);
@@ -62,7 +61,7 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
                                     'BlockSize', [1 1]);
                 hog_ChunkM(frame) = hog_vec;
             end
-            hog_ChunkM(~any(hog_ChunkM, 2), :) = [];
+            hog_ChunkN(~any(hog_ChunkN, 2), :) = [];
             cossim_tmp = pdist2(hog_ChunkN, hog_ChunkM, 'cosine');
             try
                 cossim_tmp = squareform(cossim_tmp);
