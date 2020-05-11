@@ -9,9 +9,7 @@ function C_clusterDistances(output_folder)
         boot = load(boot_files{vidOutput});
         dist = load(dist_files{vidOutput});
         dist = dist.cossim_hogs;
-        cutoff = quantile(boot.avg_distance, 0.95);
-        stereotypedFrames = extractStereotyped(dist, cutoff);
-        stereotypedFrames = thresholdDuration(stereotypedFrames);
+        [links, stereotypedFrames, minClusterNumber] = helperPost(cossim_hogs, avg_distance);
         save(strcat('stereotyped_frames_N#_', num2str(ceil(vidOutput/2)), '.mat'), ...
                     'stereo typedFrames')
     end
