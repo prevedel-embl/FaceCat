@@ -15,15 +15,16 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
                             laserSwitchOn_idx, laserSwitchOff_idx, pos_snout);
     lenChunk = floor(numFrames/number_dataChunks);
     % Load only these chunks of 2GB size into memory, one at a time
-    parfor N=1:number_dataChunks
+    for N=1:number_dataChunks
         disp(strcat('Processing chunk ', num2str(N), ' out of_ ', num2str(number_dataChunks)));
         frameRangeLO = laserSwitchOn_idx;
-        frameRangeHI = laserSwitchOff_idx;
+        frameRangeHI = lenChunk*N + 1;
         if frameRangeHI > numFrames
             frameRangeHI = numFrames;
         end
         
         hog_ChunkN = [];
+        frame = frameRangeLO;
         % read the frames and convert them into HOG vectors
         parfor frame = frameRangeLO:frameRangeHI
             img = read(vidReader, frame);
