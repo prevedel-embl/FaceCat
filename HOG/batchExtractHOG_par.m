@@ -15,7 +15,7 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
                             laserSwitchOn_idx, laserSwitchOff_idx, pos_snout);
     lenChunk = floor(numFrames/number_dataChunks);
     % Load only these chunks of 2GB size into memory, one at a time
-    for N=1:number_dataChunks
+    parfor N=1:number_dataChunks
         disp(strcat('Processing chunk ', num2str(N), ' out of_ ', num2str(number_dataChunks)));
         frameRangeLO = laserSwitchOn_idx;
         frameRangeHI = lenChunk*N + 1;
