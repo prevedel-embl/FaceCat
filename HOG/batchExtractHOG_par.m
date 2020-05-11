@@ -33,6 +33,9 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
                                 'BlockSize', [1 1]);
             hog_ChunkN(frame, :) = hog_vec;
         end
+        % the above code generates empty rows as a by-product of the parfor
+        % loop, they need to be removed
+        hog_ChunkN(~any(hog_ChunkN, 2), :) = [];
         cossim_hogs = pdist(hog_ChunkN, 'cosine');
         nIter = 10000;
         % Get the randomized distribution
@@ -59,6 +62,7 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
                                     'BlockSize', [1 1]);
                 hog_ChunkM(frame) = hog_vec;
             end
+            hog_ChunkM(~any(hog_ChunkM, 2), :) = [];
             cossim_tmp = pdist2(hog_ChunkN, hog_ChunkM, 'cosine');
             try
                 cossim_tmp = squareform(cossim_tmp);
@@ -67,7 +71,7 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idx, laserSwitchOff_idx, 
             cossim_hogs = [cossim_hogs; cossim_tmp];
         end
         disp(strcat('Saving results for chunk ', num2str(N)));
-%         save(strcat('Cos2-dist_Vid#_', num2str(batchNum), '_N#_', num2str(N), '_', filename, '.mat'), 'cossim_hogs', '-v7.3');
+        save(strcat('Cos2-dist_Vid#_', num2str(batchNum), '_N#_', num2str(N), '_', filename, '.mat'), 'cossim_hogs', '-v7.3');
         save(strcat('Avg_dist#_', num2str(batchNum), '_N#_', num2str(N), '_', filename, '.mat'), 'avg_distance', '-v7.3');
      %   clear cossim_hogs
     end
