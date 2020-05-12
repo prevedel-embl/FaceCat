@@ -19,7 +19,8 @@ function processMP4_1_concat(video_path, output_folder)
 
     % batchNum means the number of the recording epoch within a video (i.e.
     % a laser on period)
-    batchExtractHOG_par(video_path, laserSwitchOn_idcs, laserSwitchOff_idcs, ...
+    batchNum = 1;
+    batchExtractHOG_concat(video_path, laserSwitchOn_idcs, laserSwitchOff_idcs, ...
             batchNum, pos_snout);
         
 end
