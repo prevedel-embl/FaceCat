@@ -1,0 +1,9 @@
+*.gitignore
+*.asv
+*.mat
+*.csv
+*.txt
+*.org
+*test*
+*tmp*
+*temp*
