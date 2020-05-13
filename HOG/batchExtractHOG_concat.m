@@ -14,9 +14,10 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idcs, laserSwitchOff_idcs
     recordedFrames = [];
     for N=1:dataChunks
         tmp = laserSwitchOn_idcs(N):laserSwitchOff_idcs(N);
-        recordedFrames(end+1,:) = tmp;
+        recordedFrames = [recordedFrames tmp];
     end
     disp(strcat('Processing chunk ', num2str(N), ' out of_ ', num2str(dataChunks)));
+    hog_ChunkN = [];
     for frame=1:length(recordedFrames)
         % read the frames and convert them into HOG vectors
             img = read(vidReader, frame);
