@@ -17,7 +17,7 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idcs, laserSwitchOff_idcs
         recordedFrames = [recordedFrames tmp];
     end
     disp(strcat('Processing chunk ', num2str(N), ' out of_ ', num2str(dataChunks)));
-    hog_ChunkN = [];
+    hog_ChunkN = single.empty;
     for frame=1:length(recordedFrames)
         % read the frames and convert them into HOG vectors
             img = read(vidReader, frame);
@@ -27,16 +27,10 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idcs, laserSwitchOff_idcs
             hog_ChunkN(end+1, :) = hog_vec;
     end
         cossim_hogs = pdist(hog_ChunkN, 'cosine');
-        nIter = 10000;
-        % Get the randomized distribution
-        disp(strcat('Calculating bootstrap for chunk ', num2str(N)));
-        avg_distance =  boot(vidReader, nIter, ...
-                laserSwitchOn_idcs, laserSwitchOff_idcs, pos_snout);
-        
+    
         disp(strcat('Saving results for chunk ', num2str(N)));
         save(strcat('Cos2-dist_Vid#_', num2str(batchNum), '_N#_', num2str(N), '_', filename, '.mat'), 'cossim_hogs', '-v7.3');
-        save(strcat('Avg_dist#_', num2str(batchNum), '_N#_', num2str(N), '_', filename, '.mat'), 'avg_distance', '-v7.3');
-     %   clear cossim_hogs
+
 end
 
 
