@@ -1,4 +1,4 @@
-function [stereotypedFrames, behavior_timepoints] = visualInspection(cossim_hogs, avg_distance, percent_quant)
+function [stereotypedFrames, behavior_timepoints] = visualInspection(cossim_hogs, links, percent_quant)
 %% Take the distance matrix and detect cluster assignments and plot the result   
     % C_clusterFrames
 %     cutoff = quantile(avg_distance, percent_quant);
@@ -24,7 +24,7 @@ function [stereotypedFrames, behavior_timepoints] = visualInspection(cossim_hogs
     xticklabels(string(behavior_timepoints))
     yticks([])
     yticklabels([])
-    xlim([0 1200]);
+    xlim([0 length(cumulativeIntegral)]);
 end
 
 
