@@ -27,9 +27,10 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idcs, laserSwitchOff_idcs
             hog_ChunkN(end+1, :) = hog_vec;
     end
         cossim_hogs = pdist(hog_ChunkN, 'cosine');
+        links = linkage(cossim_hogs, 'average');
     
         disp(strcat('Saving results for chunk ', num2str(N)));
-        save(strcat('Cos2-dist_Vid#_', num2str(batchNum), '_N#_', num2str(N), '_', filename, '.mat'), 'cossim_hogs', '-v7.3');
+        save(strcat('Output', filename, '.mat'), 'cossim_hogs', 'hog_ChunkN', 'links', '-v7.3');
 
 end
 
