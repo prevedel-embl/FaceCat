@@ -1,5 +1,8 @@
-function patComp = detectPatterns(stereotypedFrames, windowSize)
+function patComp = detectPatterns(stereotypedFrames, windowSize, minOverlap)
 %% Find repeating sequences, output their number and location
+    if minOverlap > windowSize
+        error('minOverlap cannot be bigger than windowSize');
+    end
     allPatterns = zeros(length(stereotypedFrames), windowSize);
     for i=1:length(stereotypedFrames)-windowSize
         allPatterns(i, :) = stereotypedFrames(i:i+windowSize - 1, 1);
@@ -13,8 +16,14 @@ function patComp = detectPatterns(stereotypedFrames, windowSize)
         tmp = colfilt(stereotypedFrames, [windowSize 1], 'sliding', @(x) overlapCount(x, pattern'));
         % Normalize to obtain score between 0 and 1
         patComp(i).Score = tmp(:,1)/windowSize;
-        patComp(i).Overlap_Locations = find(tmp(:,1) == windowSize);
-        patComp(i).Count = length(find(tmp(:,1) == windowSize));
+        patComp(i).Overlap_Locations = struct(('Overlaps'), {});
+        itr_count = 0;
+        for j=windowSize:-1:minOverlap+1
+            itr_count = itr_count + 1;
+            tmpOverlapLoc = find(tmp(:,1) == j);
+            patComp(i).Overlap_Locations(itr_count).Overlaps = struct(strcat('MinOverlap', num2str(j)), tmpOverlapLoc);
+            patComp(i).Count(itr_count).Counts = struct(strcat('MinOverlap', num2str(j)),length(find(tmp(:,1) == windowSize)));
+        end
     end
 
 end
