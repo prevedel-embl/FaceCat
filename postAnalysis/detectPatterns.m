@@ -3,14 +3,14 @@ function patComp = detectPatterns(stereotypedFrames, windowSize, minOverlap)
     if minOverlap > windowSize
         error('minOverlap cannot be bigger than windowSize');
     end
-    allPatterns = im2col(stereotypedFrames, [windowSize 1], 'sliding')';
+    allPatterns = im2col(stereotypedFrames, [windowSize 1], 'distinct')';
     % Remove duplicate patterns to improve speed of the convolution
     allPatterns = unique(allPatterns, 'rows', 'stable');
     patComp = struct('Score', {}, 'Overlap_Locations', {}, 'Count', {});
     % Analyze every singular pattern individually
     for i=1:size(allPatterns,1)
         pattern = allPatterns(i, :);  
-        tmp = colfilt(stereotypedFrames, [windowSize 1], 'sliding', @(x) overlapCount(x, pattern'));
+        tmp = colfilt(stereotypedFrames, [windowSize 1], 'distinct', @(x) overlapCount(x, pattern'));
         % Normalize to obtain score between 0 and 1
         patComp(i).Score = tmp(:,1)/windowSize;
         patComp(i).Overlap_Locations = struct(('Overlaps'), {});
