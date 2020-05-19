@@ -3,10 +3,7 @@ function patComp = detectPatterns(stereotypedFrames, windowSize, minOverlap)
     if minOverlap > windowSize
         error('minOverlap cannot be bigger than windowSize');
     end
-    allPatterns = zeros(length(stereotypedFrames), windowSize);
-    for i=1:length(stereotypedFrames)-windowSize
-        allPatterns(i, :) = stereotypedFrames(i:i+windowSize - 1, 1);
-    end
+    allPatterns = im2col(stereotypedFrames, [15 1], 'sliding')';
     % Remove duplicate patterns to improve speed of the convolution
     allPatterns = unique(allPatterns, 'rows', 'stable');
     patComp = struct('Score', {}, 'Overlap_Locations', {}, 'Count', {});
