@@ -1,4 +1,4 @@
-function patComp = detectPatterns(stereotypedFrames, windowSize, minOverlap)
+function [patComp, distMat] = detectPatterns(stereotypedFrames, windowSize, minOverlap)
 %% Find repeating sequences, output their number and location
     if minOverlap > windowSize
         error('minOverlap cannot be bigger than windowSize');
@@ -6,6 +6,7 @@ function patComp = detectPatterns(stereotypedFrames, windowSize, minOverlap)
     allPatterns = im2col(stereotypedFrames, [windowSize 1], 'distinct')';
     % Remove duplicate patterns to improve speed of the convolution
     allPatterns = unique(allPatterns, 'rows', 'stable');
+    distMat = patMat(allPatterns);
     patComp = struct('Score', {}, 'Overlap_Locations', {}, 'Count', {});
     % Analyze every singular pattern individually
     for i=1:size(allPatterns,1)
@@ -28,3 +29,17 @@ end
 function out = overlapCount(block, pattern)
     out = sum(block == pattern);
 end    
+
+function distMat=patMat(allPatterns)
+[rows, cols] = size(allPatterns);
+    for i=1:rows
+        d = bsxfun(@eq,allPatterns, allPatterns(i,:));
+        distMat(i,:) = sum(d,2);
+    end
+end
+
+
+
+        
+
+
