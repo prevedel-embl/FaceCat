@@ -24,7 +24,7 @@ function [patComp, distMat] = detectPatterns(classifiedFrames, varargin)
     windowSize = parser.Results.windowSize;
     windowMode = parser.Results.windowMode;
 %% Find repeating sequences, output their number and location
-    if minOverlap > windowSize
+    if isnumeric(minOverlap) && minOverlap > windowSize
         error('minOverlap cannot be bigger than windowSize');
     end
     
