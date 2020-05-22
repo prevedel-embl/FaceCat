@@ -10,7 +10,8 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idcs, laserSwitchOff_idcs
         keyboard
     end
     dataChunks = length(laserSwitchOn_idcs);
-    % Load only these chunks of 2GB size into memory, one at a time
+    % Concatenate the indices of all frames during which the Ca recording
+    % laser is on
     recordedFrames = [];
     for N=1:dataChunks
         tmp = laserSwitchOn_idcs(N):laserSwitchOff_idcs(N);
@@ -26,7 +27,11 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idcs, laserSwitchOff_idcs
                                 'BlockSize', [1 1]);
             hog_ChunkN(end+1, :) = hog_vec;
     end
+<<<<<<< HEAD
     try
+=======
+        
+>>>>>>> e92c04d0cbe28a970ef426b50dc6267f44165f12
         cossim_hogs = pdist(hog_ChunkN, 'cosine');
         links = linkage(cossim_hogs, 'average');
     catch 
