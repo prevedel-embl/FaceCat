@@ -20,17 +20,22 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idcs, laserSwitchOff_idcs
     hog_ChunkN = single.empty;
     for frame=1:length(recordedFrames)
         % read the frames and convert them into HOG vectors
-            img = read(vidReader, frame);
+            img = read(vidReader, recordedFrames(frame));
             img = grayCrop(img, pos_snout);
             hog_vec = extractHOGFeatures(img, 'CellSize', [32 32], 'NumBins', 8, ...
                                 'BlockSize', [1 1]);
             hog_ChunkN(end+1, :) = hog_vec;
     end
+    try
         cossim_hogs = pdist(hog_ChunkN, 'cosine');
         links = linkage(cossim_hogs, 'average');
-    
+    catch 
+        disp('No distance calculation');
+        save(strcat('Output', filename, '.mat'), '-v7.3');
+    end
         disp(strcat('Saving results for chunk ', num2str(N)));
-        save(strcat('Output', filename, '.mat'), 'cossim_hogs', 'hog_ChunkN', 'links', '-v7.3');
+        save(strcat('Output', filename, '.mat'), '-v7.3');
+        disp('saved');
 
 end
 
