@@ -38,6 +38,8 @@ function [patComp, distMat] = detectPatterns(classifiedFrames, varargin)
     
     % Remove duplicate patterns to improve speed of the convolution
     allPatterns = unique(allPatterns, 'rows', 'stable');
+    % Remove circular shifts/permutations of patterns
+    allPatterns = removeDuplicatePatterns(allPatterns, windowSize);
     % Optionally: calculate cutoff based on bootstrap rather than
     % specifying the minimum overlap
     if strcmp(minOverlap, 'boot')
@@ -51,13 +53,8 @@ function [patComp, distMat] = detectPatterns(classifiedFrames, varargin)
     distMat = patMat(allPatterns, windowSize);
     patComp(1).distMat = distMat;
     patComp(1).cutoff = array2table(cutoff', ...
-<<<<<<< HEAD
-        'VariableNames', {'Percent_Cutoff', 'Corresponding_Overlap_in_Frames', ...
-        'Corresponding_similarity'});
-=======
         'VariableNames', {'Percent Cutoff', 'Corresponding Overlap in Frames', ...
         'Corresponding similarity'});
->>>>>>> ed7396e613b6a46dd136a683ca4345d8d029beca
     
     % Analyze every singular pattern individually
     for i=1:size(allPatterns,1)
@@ -66,7 +63,7 @@ function [patComp, distMat] = detectPatterns(classifiedFrames, varargin)
             'sliding', @(x) overlapCount(x, pattern'));
         % Normalize to obtain score between 0 and 1
         % Downsample ('distinct' == true) to align with Ca recording
-        if windowMode == 'distinct'
+        if strcmp(windowMode, 'distinct')
             patComp(i).Score = tmp(1:windowSize:end,1)/windowSize;
         else
             patComp(i).Score = tmp(:,1)/windowSize;
@@ -92,9 +89,8 @@ function distMat=patMat(allPatterns, windowSize)
     [rows, ~] = size(allPatterns);
     distMat = zeros([rows rows]);
     for i=1:rows
-        d = bsxfun(@eq,allPatterns, allPatterns(i,:));
-        distMat(i,:) = sum(d,2);
-%         distMat(i,:) = sum(d,2)/windowSize;
+        d = bsxfun(@eq,allPatterns, allPatterns(i,:));  
+        distMat(i,:) = sum(d,2)/windowSize;
     end
 end
 
@@ -113,8 +109,6 @@ function cutoff = bootDist(allPatterns)
         cutoff(2, idx) = quantile(bootMat, percent(idx));
     end
 end
-=======
-end
 
 % tic
 % for i=1:size(allPatterns,1)
@@ -124,4 +118,3 @@ end
 %     end
 % end
 % toc
->>>>>>> ed7396e613b6a46dd136a683ca4345d8d029beca
