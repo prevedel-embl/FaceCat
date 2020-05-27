@@ -51,8 +51,13 @@ function [patComp, distMat] = detectPatterns(classifiedFrames, varargin)
     distMat = patMat(allPatterns, windowSize);
     patComp(1).distMat = distMat;
     patComp(1).cutoff = array2table(cutoff', ...
+<<<<<<< HEAD
         'VariableNames', {'Percent_Cutoff', 'Corresponding_Overlap_in_Frames', ...
         'Corresponding_similarity'});
+=======
+        'VariableNames', {'Percent Cutoff', 'Corresponding Overlap in Frames', ...
+        'Corresponding similarity'});
+>>>>>>> ed7396e613b6a46dd136a683ca4345d8d029beca
     
     % Analyze every singular pattern individually
     for i=1:size(allPatterns,1)
@@ -88,7 +93,8 @@ function distMat=patMat(allPatterns, windowSize)
     distMat = zeros([rows rows]);
     for i=1:rows
         d = bsxfun(@eq,allPatterns, allPatterns(i,:));
-        distMat(i,:) = sum(d,2)/windowSize;
+        distMat(i,:) = sum(d,2);
+%         distMat(i,:) = sum(d,2)/windowSize;
     end
 end
 
@@ -107,3 +113,15 @@ function cutoff = bootDist(allPatterns)
         cutoff(2, idx) = quantile(bootMat, percent(idx));
     end
 end
+=======
+end
+
+% tic
+% for i=1:size(allPatterns,1)
+%     tmp = allPatterns(i,:);
+%     for j=1:size(allPatterns,2)-1
+%         a(i,:) = circshift(tmp, j);
+%     end
+% end
+% toc
+>>>>>>> ed7396e613b6a46dd136a683ca4345d8d029beca
