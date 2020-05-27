@@ -88,7 +88,8 @@ function distMat=patMat(allPatterns, windowSize)
     distMat = zeros([rows rows]);
     for i=1:rows
         d = bsxfun(@eq,allPatterns, allPatterns(i,:));
-        distMat(i,:) = sum(d,2)/windowSize;
+        distMat(i,:) = sum(d,2);
+%         distMat(i,:) = sum(d,2)/windowSize;
     end
 end
 
@@ -107,3 +108,12 @@ function cutoff = bootDist(allPatterns)
         cutoff(2, idx) = quantile(bootMat, percent(idx));
     end
 end
+
+% tic
+% for i=1:size(allPatterns,1)
+%     tmp = allPatterns(i,:);
+%     for j=1:size(allPatterns,2)-1
+%         a(i,:) = circshift(tmp, j);
+%     end
+% end
+% toc
