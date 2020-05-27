@@ -1,4 +1,4 @@
-function batchExtractHOG_par(video_path, laserSwitchOn_idcs, laserSwitchOff_idcs, ...
+function batchExtractHOG_concat(video_path, laserSwitchOn_idcs, laserSwitchOff_idcs, ...
             batchNum, pos_snout)
     vidReader = VideoReader(video_path);
     % Extract File Name, for savename generation
@@ -27,11 +27,7 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idcs, laserSwitchOff_idcs
                                 'BlockSize', [1 1]);
             hog_ChunkN(end+1, :) = hog_vec;
     end
-<<<<<<< HEAD
     try
-=======
-        
->>>>>>> e92c04d0cbe28a970ef426b50dc6267f44165f12
         cossim_hogs = pdist(hog_ChunkN, 'cosine');
         links = linkage(cossim_hogs, 'average');
     catch 
@@ -41,6 +37,7 @@ function batchExtractHOG_par(video_path, laserSwitchOn_idcs, laserSwitchOff_idcs
         disp(strcat('Saving results for chunk ', num2str(N)));
         save(strcat('Output', filename, '.mat'), '-v7.3');
         disp('saved');
+       
 
 end
 

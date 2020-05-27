@@ -1,4 +1,5 @@
 function [patComp, distMat] = detectPatterns(classifiedFrames, varargin)
+%% Find all sequential patterns of length windowSize in classifiedFrames, store their count and index locations
 % Set default input values and parse input arguments
     defaultWindowSize = 15;
     defaultWindowMode = 'distinct';
@@ -29,7 +30,7 @@ function [patComp, distMat] = detectPatterns(classifiedFrames, varargin)
     end
     
     % Extract all possible patterns given the windowMode constraint
-    if windowMode == 'distinct'
+    if strcmp(windowMode, 'distinct')
         allPatterns = im2col(classifiedFrames, [windowSize 1], 'distinct')';
     else
         allPatterns = im2col(classifiedFrames, [windowSize 1], 'sliding')';
@@ -40,11 +41,19 @@ function [patComp, distMat] = detectPatterns(classifiedFrames, varargin)
     % Optionally: calculate cutoff based on bootstrap rather than
     % specifying the minimum overlap
     if strcmp(minOverlap, 'boot')
-        minOverlap = bootDist(allPatterns);
+        cutoff = bootDist(allPatterns);
+        cutoff(3, :) = cutoff(2, :)/windowSize;
+        minOverlap = cutoff(2, 1);
     end
-    
+    % Initialize structure to store the results
+    patComp = struct('Score', {}, 'Overlap_Locations', {}, 'Count', {}, ...
+        'distMat', [], 'cutoff', []);
     distMat = patMat(allPatterns, windowSize);
-    patComp = struct('Score', {}, 'Overlap_Locations', {}, 'Count', {});
+    patComp(1).distMat = distMat;
+    patComp(1).cutoff = array2table(cutoff', ...
+        'VariableNames', {'Percent_Cutoff', 'Corresponding_Overlap_in_Frames', ...
+        'Corresponding_similarity'});
+    
     % Analyze every singular pattern individually
     for i=1:size(allPatterns,1)
         pattern = allPatterns(i, :);  
@@ -91,5 +100,10 @@ function cutoff = bootDist(allPatterns)
         randPat2 = allPatterns(randIdcs(2), :);
         bootMat(i, 1) = overlapCount(randPat1, randPat2);
     end
-    cutoff = quantile(bootMat, 0.95);
+    percent = [0.50 0.60 0.70 0.80 0.85 0.90 0.95 0.99];
+    cutoff = zeros(3, length(percent));
+    cutoff(1, :) = percent;
+    for idx=1:length(percent)
+        cutoff(2, idx) = quantile(bootMat, percent(idx));
+    end
 end
