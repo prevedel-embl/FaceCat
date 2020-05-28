@@ -39,7 +39,7 @@ function [patComp, distMat] = detectPatterns(classifiedFrames, varargin)
     % Remove duplicate patterns to improve speed of the convolution
     allPatterns = unique(allPatterns, 'rows', 'stable');
     % Remove circular shifts/permutations of patterns
-    allPatterns = removeDuplicatePatterns(allPatterns, windowSize);
+    allPatterns = removeDuplicatePatterns(allPatterns);
     % Optionally: calculate cutoff based on bootstrap rather than
     % specifying the minimum overlap
     if strcmp(minOverlap, 'boot')
@@ -59,7 +59,7 @@ function [patComp, distMat] = detectPatterns(classifiedFrames, varargin)
         'Corresponding similarity'});
     
     % Analyze every singular pattern individually
-    for i=1:size(allPatterns,1)
+    parfor i=1:size(allPatterns,1)
         pattern = allPatterns(i, :);  
         patComp(i).Pattern = pattern;
         tmp = colfilt(classifiedFrames, [windowSize 1], [windowSize 1], ...
@@ -90,7 +90,7 @@ end
 function distMat=patMat(allPatterns, windowSize)
     [rows, ~] = size(allPatterns);
     distMat = zeros([rows rows]);
-    for i=1:rows
+    parfor i=1:rows
         d = bsxfun(@eq,allPatterns, allPatterns(i,:));  
         distMat(i,:) = sum(d,2)/windowSize;
     end
@@ -98,7 +98,7 @@ end
 
 function cutoff = bootDist(allPatterns)
     bootMat = zeros(10000, 1);
-    for i=1:10000
+    parfor i=1:10000
         randIdcs = randi(size(allPatterns, 1), [1 2]);
         randPat1 = allPatterns(randIdcs(1), :);
         randPat2 = allPatterns(randIdcs(2), :);
@@ -111,12 +111,3 @@ function cutoff = bootDist(allPatterns)
         cutoff(2, idx) = quantile(bootMat, percent(idx));
     end
 end
-
-% tic
-% for i=1:size(allPatterns,1)
-%     tmp = allPatterns(i,:);
-%     for j=1:size(allPatterns,2)-1
-%         a(i,:) = circshift(tmp, j);
-%     end
-% end
-% toc
