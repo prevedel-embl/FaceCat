@@ -63,36 +63,34 @@ function [patComp, distMat] = detectPatterns(classifiedFrames, varargin)
                         allPatterns);
     end
     % Downsample ('distinct' == true) to align with Ca recording
+    % Normalize to obtain score between 0 and 1
     if strcmp(windowMode, 'distinct')
-        scoreMat = scoreMat(:, 1:windowSize:end);
+        scoreMatConv = scoreMat(:, 1:windowSize:end)/windowSize;
+        classifiedFramesConv = classifiedFrames(1, 1:windowSize:end);
     else
-        scoreMat = scoreMat;
+        scoreMatConv = scoreMat/windowSize;
+        classifiedFramesConv = classifiedFrames;
     end
     % Initialize structure to store the results
     patComp = struct('Pattern', num2cell(allPatterns, 2), ...
-        'Score', num2cell(scoreMat, 2));
+        'Score', num2cell(scoreMatConv, 2));
     distMat = patMat(allPatterns, windowSize);
-    patComp(1).Assigned_Clusters = classifiedFrames;
+    patComp(1).Assigned_Clusters = classifiedFramesConv(1, :);
     patComp(1).distMat = distMat;
     patComp(1).cutoff = array2table(cutoff', ...
         'VariableNames', {'Percent Cutoff', 'Corresponding Overlap in Frames', ...
         'Corresponding similarity'});
-    
-    
-   for k = 1:noPatterns
+    % Store the locations for the varying degrees of overlap
+    parfor k = 1:noPatterns
         itr_count = 0;
-        
         patComp(k).Overlap_Locations = struct(('Overlaps'), {});
         for j=minOverlap:windowSize
             itr_count = itr_count + 1;
-            tmpOverlapLoc = find(patComp(k).Score(:) == j);
+            tmpOverlapLoc = find(scoreMat(k,:) == j);
             patComp(k).Overlap_Locations(itr_count).Overlaps = ...
                 struct(strcat('MinOverlap', num2str(j)), tmpOverlapLoc);
         end
-    end
-    
-    % Normalize to obtain score between 0 and 1
-    patComp(1).Score = patComp(1).Score/windowSize;
+   end
 end
 
 function out = overlapCount(block, pattern)
@@ -123,3 +121,4 @@ function cutoff = bootDist(allPatterns)
         cutoff(2, idx) = quantile(bootMat, percent(idx));
     end
 end
+
