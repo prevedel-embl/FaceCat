@@ -57,34 +57,46 @@ function [patComp, distMat] = detectPatterns(classifiedFrames, varargin)
     patComp(1).cutoff = array2table(cutoff', ...
         'VariableNames', {'Percent Cutoff', 'Corresponding Overlap in Frames', ...
         'Corresponding similarity'});
+    % Convert classifiedFrames to a column vector
+    if size(classifiedFrames, 2) == 1
+        classifiedFrames = classifiedFrames';
+    end
+    % Expand classified frames, do all overlap comparisons with the
+    % remaining patterns at once for every frame
+    noPatterns = size(allPatterns, 1);
+    noConvItr = size(classifiedFrames, 2) - windowSize + 1;
+    classifiedFrames = repmat(classifiedFrames, noPatterns, 1);
+    scoreMat = zeros(noPatterns, noConvItr);
+    for i=1:noConvItr
+        scoreMat(:,i) = overlapCount(classifiedFrames(:, i:i + (windowSize-1)), ...
+                        allPatterns);
+    end
     
-    % Analyze every singular pattern individually
-    parfor i=1:size(allPatterns,1)
-        pattern = allPatterns(i, :);  
-        patComp(i).Pattern = pattern;
-        tmp = colfilt(classifiedFrames, [windowSize 1], [windowSize 1], ...
-            'sliding', @(x) overlapCount(x, pattern'));
-        % Normalize to obtain score between 0 and 1
+    for k = 1:noPatterns
+        itr_count = 0;
+        patComp(k).Pattern = allPatterns(k,:);
         % Downsample ('distinct' == true) to align with Ca recording
         if strcmp(windowMode, 'distinct')
-            patComp(i).Score = tmp(1:windowSize:end,1)/windowSize;
+            patComp(k).Score = scoreMat(k, 1:windowSize:end);
         else
-            patComp(i).Score = tmp(:,1)/windowSize;
+            patComp(k).Score = scoreMat(k, :);
         end
-        patComp(i).Overlap_Locations = struct(('Overlaps'), {});
-        
-        itr_count = 0;
+        patComp(k).Overlap_Locations = struct(('Overlaps'), {});
         for j=minOverlap:windowSize
             itr_count = itr_count + 1;
-            tmpOverlapLoc = find(tmp(:,1) == j);
-            patComp(i).Overlap_Locations(itr_count).Overlaps = struct(strcat('MinOverlap', num2str(j)), tmpOverlapLoc);
+            tmpOverlapLoc = find(patComp(k).Score(:) == j);
+            patComp(k).Overlap_Locations(itr_count).Overlaps = ...
+                struct(strcat('MinOverlap', num2str(j)), tmpOverlapLoc);
         end
     end
-
+    
+    % Normalize to obtain score between 0 and 1
+    patComp(1).Score = patComp(1).Score/windowSize;
+    
 end
 
 function out = overlapCount(block, pattern)
-    out = sum(block == pattern);
+    out = sum(block == pattern, 2);
 end    
 
 function distMat=patMat(allPatterns, windowSize)
