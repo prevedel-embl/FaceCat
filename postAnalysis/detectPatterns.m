@@ -81,6 +81,7 @@ function [patComp, distMat] = detectPatterns(classifiedFrames, varargin)
         'VariableNames', {'Percent Cutoff', 'Corresponding Overlap in Frames', ...
         'Corresponding similarity'});
     % Store the locations for the varying degrees of overlap
+    scoreMat = scoreMat(:, 1:windowSize:end);
     parfor k = 1:noPatterns
         itr_count = 0;
         patComp(k).Overlap_Locations = struct(('Overlaps'), {});
