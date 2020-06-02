@@ -1,4 +1,4 @@
-function [patComp, distMat] = detectPatterns(classifiedFrames, varargin)
+function [patComp] = detectPatterns(classifiedFrames, varargin)
 %% Find all sequential patterns of length windowSize in classifiedFrames, store their count and index locations
 % Set default input values and parse input arguments
     defaultWindowSize = 15;
@@ -74,9 +74,9 @@ function [patComp, distMat] = detectPatterns(classifiedFrames, varargin)
     % Initialize structure to store the results
     patComp = struct('Pattern', num2cell(allPatterns, 2), ...
         'Score', num2cell(scoreMatConv, 2));
-    distMat = patMat(allPatterns, windowSize);
+    simMat = patMat(allPatterns, windowSize);
     patComp(1).Assigned_Clusters = classifiedFramesConv(1, :);
-    patComp(1).distMat = distMat;
+    patComp(1).simMat = simMat;
     patComp(1).cutoff = array2table(cutoff', ...
         'VariableNames', {'Percent Cutoff', 'Corresponding Overlap in Frames', ...
         'Corresponding similarity'});
@@ -94,32 +94,8 @@ function [patComp, distMat] = detectPatterns(classifiedFrames, varargin)
    end
 end
 
-function out = overlapCount(block, pattern)
-    out = sum(block == pattern, 2);
-end    
 
-function distMat=patMat(allPatterns, windowSize)
-    [rows, ~] = size(allPatterns);
-    distMat = zeros([rows rows]);
-    parfor i=1:rows
-        d = bsxfun(@eq,allPatterns, allPatterns(i,:));  
-        distMat(i,:) = sum(d,2)/windowSize;
-    end
-end
 
-function cutoff = bootDist(allPatterns)
-    bootMat = zeros(10000, 1);
-    parfor i=1:10000
-        randIdcs = randi(size(allPatterns, 1), [1 2]);
-        randPat1 = allPatterns(randIdcs(1), :);
-        randPat2 = allPatterns(randIdcs(2), :);
-        bootMat(i, 1) = overlapCount(randPat1, randPat2);
-    end
-    percent = [0.50 0.60 0.70 0.80 0.85 0.90 0.95 0.99];
-    cutoff = zeros(3, length(percent));
-    cutoff(1, :) = percent;
-    for idx=1:length(percent)
-        cutoff(2, idx) = quantile(bootMat, percent(idx));
-    end
-end
+
+
 
