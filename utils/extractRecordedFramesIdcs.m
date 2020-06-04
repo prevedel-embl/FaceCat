@@ -23,4 +23,8 @@ function [laserSwitchOn_idcs, laserSwitchOff_idcs] = extractRecordedFramesIdcs(l
     % Only take epochs of the laser turned on for more than 1 minute
     laserSwitchOn_idcs = laserSwitchOn_idcs(find(recordLen > 3600));
     laserSwitchOff_idcs = laserSwitchOff_idcs(find(recordLen > 3600));
+    
+    % There is a delay of 2.3 s between the onset of the laser and the
+    % start of the recording. This fixes the offset
+    laserSwitchOn_idcs = laserSwitchOn_idcs + 138;
 end
