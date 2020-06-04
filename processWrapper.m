@@ -1,16 +1,7 @@
-function processWrapper(fileNames)
-%     fileNames = {...
-%         'Y:\members\Boffi\data\M1\20200417\KLS-91898\Concat_analysis\20200417-91898_concatAll.mp4' ...
-%       };
-    
 function processWrapper()
     fileNames = {...
         'Y:\members\Boffi\data\M1\20200417\KLS-618086\Concat_analysis\20200417-618086_concatAll.mp4' ...
       };
-    if isempty(fileNames)
-        disp('Provide full paths to the videos to be analyzed, put in fileNmaes cell array.');
-        keyboard
-    end
     for i = 1:length(fileNames)
         video_path = fileNames{i};
         [pos_snout{i}, pos_eye{i}] = uiDrawRois(video_path);
