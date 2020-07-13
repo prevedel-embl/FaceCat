@@ -28,13 +28,6 @@ function [patComp] = detectPatterns(classifiedFrames, varargin)
     if isnumeric(minOverlap) && minOverlap > windowSize
         error('minOverlap cannot be bigger than windowSize');
     end
-    % Extend array for frequency alignment
-    frameRate = 60;
-    caRate = 3.91;
-    precision = 3;
-    [ratio, classifiedFrames] = alignSamplingRates(classifiedFrames, ...
-                frameRate, caRate, precision);
-    windowSize = windowSize*10^precision;
     % Extract all possible patterns given the windowMode constraint
     if strcmp(windowMode, 'distinct')
         allPatterns = im2col(classifiedFrames, [windowSize 1], 'distinct')';
