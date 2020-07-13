@@ -1,0 +1,14 @@
+function subsetDistMat = subsetPdist(framesStart, framesEnd, len, distMat)
+    subsetDistMat = [];
+    segmentLen = framesEnd - framesStart;
+    for i = framesStart:framesEnd + 1
+
+        lowerIndex = len*(i-1) + segmentLen*(i-2);
+        if lowerIndex < 1
+            lowerIndex = 1;
+        end
+        higherIndex = lowerIndex + segmentLen - i;
+        subsetDistMat = [subsetDistMat, distMat(lowerIndex:higherIndex)];
+      
+    end
+end
