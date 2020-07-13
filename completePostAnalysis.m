@@ -8,11 +8,8 @@ function completePostAnalysis(sigma)
          disp('Create a cell array "paths" cotaining the full paths of the data to be analyzed');
          keyboard
     end
-    % 1) If not done yet, perform the primary HOG analysis on the corresponding
-    % videos
-    % processWrapper(paths);
 
-    % 2) Perform all post analysis steps and store the results in the same
+    % Perform all post analysis steps and store the results in the same
     % directory as the data
     for i = 1:length(paths)
         path = paths{i};
