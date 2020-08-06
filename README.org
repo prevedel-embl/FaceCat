@@ -1,4 +1,4 @@
-#+Title: FacePattern
+#+Title: FaceCat
 
 This is the pipeline I wrote for my Master Thesis in the Prevedel group at EMBL. It aims at extracting stereotyped patterns of facial movements from simple b/w webcam recordings of head-fixed mice.
 
@@ -6,3 +6,4 @@ This is the pipeline I wrote for my Master Thesis in the Prevedel group at EMBL.
    1. [ ] Find a more objective way to determine the number of clusters per video
       + currently, the number is determined after smoothing a tSNE plot of HOG vectors with a Gaussian kernel with the heuristic \sigma of 1.8
    2. [ ] Enable the option to work on videos that don't have changing grayscale values in the eye (i.e. no IR laser recording of neural activity)
+   3. [ ] Find a less biased way to estimate the number of clusters present in the data
