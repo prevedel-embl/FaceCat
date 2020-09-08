@@ -19,9 +19,18 @@ function batchExtractHOG_concat(video_path, laserSwitchOn_idcs, laserSwitchOff_i
     end
     disp(strcat('Processing chunk ', num2str(N), ' out of_ ', num2str(dataChunks)));
     hog_ChunkN = single.empty;
+    eng_mean = single.empty;
+    % this should be set earlier and higher-level in the code
+    no_sd = 2;
     for frame=1:length(recordedFrames)
         % read the frames and convert them into HOG vectors
             img = read(vidReader, recordedFrames(frame));
+            img = rgb2gray(img);
+            % This was added 2020-09-08: Alternative way to determine the number of clusters
+            % present in the data, inspired by Musall et al 2019
+            eng_mean(end+1, :) = getMotE(img, no_sd);
+            eng_mean = mean(eng_mean);  
+            % grayCrop now performs unnecessary check of ndim of img
             img = grayCrop(img, pos_snout);
             hog_vec = extractHOGFeatures(img, 'CellSize', [32 32], 'NumBins', 8, ...
                                 'BlockSize', [1 1]);
@@ -41,5 +50,3 @@ function batchExtractHOG_concat(video_path, laserSwitchOn_idcs, laserSwitchOff_i
        
 
 end
-
-
