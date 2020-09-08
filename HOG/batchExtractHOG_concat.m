@@ -41,11 +41,11 @@ function batchExtractHOG_concat(video_path, laserSwitchOn_idcs, laserSwitchOff_i
         links = linkage(cossim_hogs, 'average');
     catch 
         disp('No distance calculation');
-        save(strcat('Output_', filename, '.mat'), '-v7.3', 'hog_ChunkN');
+        save(strcat('Output_', filename, '.mat'), '-v7.3', 'hog_ChunkN', 'no_clusters');
     end
         disp(strcat('Saving results for chunk ', num2str(N)));
         save(strcat('Output_', filename, '.mat'), '-v7.3', 'hog_ChunkN', ...
-                    'cossim_hogs', 'links');
+                    'cossim_hogs', 'links', 'no_clusters');
         disp('saved');
        
 
