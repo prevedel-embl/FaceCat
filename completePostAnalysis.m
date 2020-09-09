@@ -1,9 +1,9 @@
 
-function completePostAnalysis(sigma)
+function completePostAnalysis(sigma, paths)
     % list of all locations of hog_ChunkN
-    paths = {    ...
-    '/path/to/processWrapper/output.mat' ...
-    };
+%     paths = {    ...
+%     '/path/to/processWrapper/output.mat' ...
+%     };
     if isempty(paths)
          disp('Create a cell array "paths" cotaining the full paths of the data to be analyzed');
          keyboard
