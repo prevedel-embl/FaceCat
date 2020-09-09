@@ -7,3 +7,5 @@ This is the pipeline I wrote for my Master Thesis in the Prevedel group at EMBL.
       + currently, the number is determined after smoothing a tSNE plot of HOG vectors with a Gaussian kernel with the heuristic \sigma of 1.8
    2. [ ] Enable the option to work on videos that don't have changing grayscale values in the eye (i.e. no IR laser recording of neural activity)
    3. [ ] Train a CNN/ random forest classifier on FaceCat output and compare the performance on another video
+   4. [ ] =completePostAnalysis= : move windowSize array to options set by user, let it operate based on the musall-type cluster estimate
+   5. [ ] =batchExtract_hog= : move sd parameter to options set by user
