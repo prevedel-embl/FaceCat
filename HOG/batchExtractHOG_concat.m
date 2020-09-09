@@ -1,4 +1,4 @@
-function batchExtractHOG_concat(video_path, laserSwitchOn_idcs, laserSwitchOff_idcs, ...
+function savename = batchExtractHOG_concat(video_path, laserSwitchOn_idcs, laserSwitchOff_idcs, ...
             batchNum, pos_snout)
     vidReader = VideoReader(video_path);
     % Extract File Name, for savename generation
@@ -28,23 +28,25 @@ function batchExtractHOG_concat(video_path, laserSwitchOn_idcs, laserSwitchOff_i
             img = rgb2gray(img);
             % This was added 2020-09-08: Alternative way to determine the number of clusters
             % present in the data, inspired by Musall et al 2019
-            eng_mean(end+1, :) = getMotE(img, no_sd);
-            eng_mean = mean(eng_mean);  
+            eng_mean(end+1, :) = getMotE(img, vidReader, recordedFrames);
+            eng_mean = mean(eng_mean(:));  
             % grayCrop now performs unnecessary check of ndim of img
             img = grayCrop(img, pos_snout);
             hog_vec = extractHOGFeatures(img, 'CellSize', [32 32], 'NumBins', 8, ...
                                 'BlockSize', [1 1]);
             hog_ChunkN(end+1, :) = hog_vec;
     end
+    no_clusters = clusterEstimate(eng_mean, no_sd);
+    savename = strcat('Output_', filename, '.mat');
     try
         cossim_hogs = pdist(hog_ChunkN, 'cosine');
         links = linkage(cossim_hogs, 'average');
     catch 
         disp('No distance calculation');
-        save(strcat('Output_', filename, '.mat'), '-v7.3', 'hog_ChunkN', 'no_clusters');
+        save(savename, '-v7.3', 'hog_ChunkN', 'no_clusters');
     end
         disp(strcat('Saving results for chunk ', num2str(N)));
-        save(strcat('Output_', filename, '.mat'), '-v7.3', 'hog_ChunkN', ...
+        save(savename, '-v7.3', 'hog_ChunkN', ...
                     'cossim_hogs', 'links', 'no_clusters');
         disp('saved');
        
