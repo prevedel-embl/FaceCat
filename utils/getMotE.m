@@ -1,6 +1,6 @@
-function energy = getMotE(frame)
+function energy = getMotE(frame, vidReader, recordedFrames)
     % read the current frame
-    current = img;
+    current = frame;
     % read the next frame
     img2 = read(vidReader, recordedFrames(frame) + 1); 
     next = img2;
