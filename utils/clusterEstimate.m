@@ -6,6 +6,6 @@ function no_clusters = clusterEstimate(eng_mean, no_sd)
     significant_energy = eng_mean_tot + no_sd*eng_mean_sd;
     % output logical mask containing 1s whenever significant motion engergy
     % is exceeded
-    no_clusters = eng_mean_tot > significant_energy;
+    no_clusters = eng_mean > significant_energy;
     no_clusters = length(find(no_clusters == 1));
 end
