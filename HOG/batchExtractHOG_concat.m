@@ -26,14 +26,17 @@ function savename = batchExtractHOG_concat(video_path, laserSwitchOn_idcs, laser
         % read the frames and convert them into HOG vectors
             img = read(vidReader, recordedFrames(frame));
             img = grayCrop(img, pos_snout);
-            img2 = read(vidReader, recordedFrames(frame + 1));
-            img2 = grayCrop(img2, pos_snout);
-            % This was added 2020-09-08: Alternative way to determine the number of clusters
-            % present in the data, inspired by Musall et al 2019
-            energy(:, :,end+1) = img2 - img;
+            
             hog_vec = extractHOGFeatures(img, 'CellSize', [32 32], 'NumBins', 8, ...
                                 'BlockSize', [1 1]);
             hog_ChunkN(end+1, :) = hog_vec;
+            if frame ~= 1
+                img2 = read(vidReader, recordedFrames(frame - 1));
+                img2 = grayCrop(img2, pos_snout);
+                % This was added 2020-09-08: Alternative way to determine the number of clusters
+                % present in the data, inspired by Musall et al 2019
+                energy(:, :,end+1) = img - img2;
+            end
     end
     eng_mean = squeeze(mean(energy, [1 2]));  
     no_clusters = clusterEstimate(eng_mean, no_sd);
