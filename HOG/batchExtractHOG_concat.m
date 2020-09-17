@@ -35,10 +35,9 @@ function savename = batchExtractHOG_concat(video_path, laserSwitchOn_idcs, laser
                 img2 = grayCrop(img2, pos_snout);
                 % This was added 2020-09-08: Alternative way to determine the number of clusters
                 % present in the data, inspired by Musall et al 2019
-                energy(:, :,end+1) = img - img2;
+                energy(end+1) = mean(img - img2);
             end
     end
-    eng_mean = squeeze(mean(energy, [1 2]));  
     no_clusters = clusterEstimate(eng_mean, no_sd);
     savename = strcat('Output_', filename, '.mat');
     try
