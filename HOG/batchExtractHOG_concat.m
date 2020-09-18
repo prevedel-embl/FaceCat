@@ -20,8 +20,6 @@ function savename = batchExtractHOG_concat(video_path, laserSwitchOn_idcs, laser
     disp(strcat('Processing chunk ', num2str(N), ' out of_ ', num2str(dataChunks)));
     hog_ChunkN = single.empty;
     energy = single.empty;
-    % this should be set earlier and higher-level in the code
-    no_sd = 2;
     for frame=1:length(recordedFrames)
         % read the frames and convert them into HOG vectors
             img = read(vidReader, recordedFrames(frame));
@@ -38,18 +36,17 @@ function savename = batchExtractHOG_concat(video_path, laserSwitchOn_idcs, laser
                 energy = [energy mean(img - img2)];
             end
     end
-    no_clusters = clusterEstimate(eng_mean, no_sd);
     savename = strcat('Output_', filename, '.mat');
     try
         cossim_hogs = pdist(hog_ChunkN, 'cosine');
         links = linkage(cossim_hogs, 'average');
     catch 
         disp('No distance calculation');
-        save(savename, '-v7.3', 'hog_ChunkN', 'no_clusters');
+        save(savename, '-v7.3', 'hog_ChunkN', 'energy');
     end
         disp(strcat('Saving results for chunk ', num2str(N)));
         save(savename, '-v7.3', 'hog_ChunkN', ...
-                    'cossim_hogs', 'links', 'no_clusters');
+                    'cossim_hogs', 'links', 'energy');
         disp('saved');
        
 
