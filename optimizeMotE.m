@@ -1,12 +1,23 @@
-function [score, classifiedFrames] = optimizeMotE(motE, links, noClusters)
+function [score, classifiedFrames] = optimizeMotE(energy, varargin)
 %% Find a cutoff value for the linkage of the HOG vectors that corresponds to the motion Energy calculated for the ROI.
 
 % Initialize values, find the threshold for the motion energy
-    noClusters = 130;
+    defaultNoClusters = 130;
 
+    parser = inputParser;
+    validNoClusters = @(x) isnumeric(x) && isscalar(x);
+    validVector = @(x) isnumeric(x) && size(x, 2) == 1;
+    validLinkage = @(x) isnumeric(x) && size(x, 2) == 3;
+    addRequired(parser, 'energy', validVector);
+    addRequired(parser, 'links', validLinkage);
+    addParameter(parser, 'noClusters', defaultNoClusters, ...
+                 validNoClusters);
+    parse(parser, energy, varargin{:});
+    
     mu = mean(energy(:));
     sig = std(energy(:));
     threshold = mu + 2*sig;
+        
 % Create the logical vector indicating significant motion energy at each
 % frame
     bin_motE = energy > threshold;
