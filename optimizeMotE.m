@@ -1,4 +1,4 @@
-function [scor, classifiedFrames] = optimizeMotE(energy, varargin)
+function [scor, classifiedFrames, noClusters] = optimizeMotE(energy, varargin)
 %% Find a cutoff value for the linkage of the HOG vectors that corresponds to the motion Energy calculated for the ROI.
 
 % Initialize values, find the threshold for the motion energy
@@ -35,9 +35,11 @@ function [scor, classifiedFrames] = optimizeMotE(energy, varargin)
     while scor ~= length(energy) & noClusters ~= noClustersOld
         classifiedFrames = cluster(links, 'maxclust', noClusters);
         % Find the logical motion Energy of the classifiedFrames
-        clusterMotE = ischange(classifiedFrames);
+        clusterMotE = diff(classifiedFrames);
+        clusterMotE > 0 = 1;
         % Ideally both logical energy descriptions should match
-        scor = sum(clusterMotE == bin_motE);
+        tmp = clusterMotE == bin_motE;
+        scor = sum(tmp);
         noClustersOld = noClusters;
         % Update noClusters to iteratively get closer to
         if length(find(clusterMotE == 1)) > length(find(bin_motE == 1))
