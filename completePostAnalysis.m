@@ -4,15 +4,15 @@ function completePostAnalysis(sigma, paths)
 %     paths = {    ...
 %     '/path/to/processWrapper/output.mat' ...
 %     };
-    if isempty(paths)
+    if isempty(paths) | ~iscell(paths)
          disp('Create a cell array "paths" cotaining the full paths of the data to be analyzed');
          keyboard
     end
 
     % Perform all post analysis steps and store the results in the same
     % directory as the data
-    for i = 1:length(paths)
-        path = paths{i};
+    for i = 1:length(paths)   
+            path = paths{i};
         try
             load(path, 'hog_ChunkN', 'links')
         catch
