@@ -27,24 +27,28 @@ function [scor, classifiedFrames, noClusters, scorList, clusterList] = optimizeM
 % Create the logical vector indicating significant motion energy at each
 % frame
     energy = permute(energy, [2 1]);
-    bin_motE = energy > threshold;
+    bin_motE = int8(energy > threshold);
+    bin_motE(bin_motE ~= 1) = NaN;
     scor = 0;
-    noClustersOld = NaN;
+    noClustersOld = [];
+    clusterList = NaN;
     itr = 1;
    
     % Terminate either when the optimatl solution is found or if further
     % iterations don't change the outcome
-    while scor ~= length(energy) & noClusters ~= noClustersOld & itr < 100
+    while scor ~= length(find(bin_motE == 1)) & ~ismember(noClusters, clusterList) 
         classifiedFrames = cluster(links, 'maxclust', noClusters);
         % Find the logical motion Energy of the classifiedFrames
         clusterMotE = diff(classifiedFrames);
         clusterMotE(clusterMotE ~= 0) = 1;
+        clusterMotE(clusterMotE == 0) = NaN;
         % Ideally both logical energy descriptions should match
         tmp = clusterMotE == bin_motE;
         scor = sum(tmp)
         noClustersOld = noClusters;
         clusterList(itr) = noClusters;
         scorList(itr) = scor;
+%         criterion(itr) = 2*noClusters - 2*log(scor);
         % Update noClusters to iteratively get closer to
         if length(find(clusterMotE == 1)) > length(find(bin_motE == 1))
             noClusters = floor(noClustersOld/2);
