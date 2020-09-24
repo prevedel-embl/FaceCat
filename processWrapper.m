@@ -1,6 +1,6 @@
 function processWrapper()
     fileNames = {...
-        '/Users/Tristan/Desktop/20200417_91898_concatAll.mp4' ...
+        '/Users/Tristan/Desktop/crop20200922.mp4' ...
       };
     for i = 1:length(fileNames)
         video_path = fileNames{i};
@@ -19,7 +19,11 @@ function processWrapper()
         savename = batchExtractHOG_concat(video_path, laserSwitchOn_idcs, laserSwitchOff_idcs, ...
                 batchNum, pos_snout{j});
         % Do the second analysis step immediately
-        disp('Done with HOG analysis, now doing post analysis step.');
+        disp('Done with HOG analysis, now doing post analysis step optimizeMotE.');
+        load(savename, 'links')
+        [scor, classifiedFrames, noClusters, scorList, clusterList] = optimizeMotE(energy, links)
+        save(strcat('optimizeMotE_', savename, '.mat'), '-v7.3')
+        disp('Done with HOG analysis, now doing post analysis step tSNE.');
         completePostAnalysis(1.8, savename);
     end
 end
