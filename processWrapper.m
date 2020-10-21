@@ -20,8 +20,9 @@ function processWrapper()
                 batchNum, pos_snout{j});
         % Do the second analysis step immediately
         disp('Done with HOG analysis, now doing post analysis step optimizeMotE.');
-        load(savename, 'links')
-        [scor, classifiedFrames, noClusters, scorList, clusterList] = optimizeMotE(energy, links)
+        load(savename, 'links', 'energy')
+        [scor, classifiedFrames, noClusters, scorList, clusterList] = ...
+            optimizeMotE(energy, links);
         save(strcat('optimizeMotE_', savename, '.mat'), '-v7.3')
         disp('Done with HOG analysis, now doing post analysis step tSNE.');
         completePostAnalysis(1.8, savename);
