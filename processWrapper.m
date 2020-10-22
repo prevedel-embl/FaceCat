@@ -1,7 +1,16 @@
-function processWrapper()
-    fileNames = {...
+function processWrapper(fileNames, noDrop)
+    defaultFileNames = {...
         '/Users/Tristan/Desktop/crop20200922.mp4' ...
       };
+    parser = inputParser;
+    validBool = @(x) islogical(x);
+    validCell = @(x) iscell(x);
+    addRequired(parser, 'fileNames', defaultFileNames, validCell);
+    addRequired(parser, 'noDrop', validBool);
+    parse(parser, fileNames, noDrop);
+    fileNames = parser.Results.fileNames;
+    noDrop = parser.Results.noDrop;
+    
     for i = 1:length(fileNames)
         video_path = fileNames{i};
         [pos_snout{i}, pos_eye{i}] = uiDrawRois(video_path);
@@ -10,7 +19,10 @@ function processWrapper()
         video_path = fileNames{j};
         % Measure the grayscale value of the eye to determine laser activity
         grayValue = measureGrayValue(video_path, pos_eye{j});
-
+        % 
+        if noDrop==true
+            grayValue = ones(len(grayValue), 1);
+        end
         [laserSwitchOn_idcs, laserSwitchOff_idcs] = extractRecordedFramesIdcs(grayValue);
 
         % batchNum means the number of the recording epoch within a video (i.e.
