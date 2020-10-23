@@ -1,13 +1,11 @@
-function processWrapper(fileNames, noDrop)
-    defaultFileNames = {...
-        '/Users/Tristan/Desktop/crop20200922.mp4' ...
-      };
+function processWrapper(varargin)
+    defaultNoDrop = false;
     parser = inputParser;
     validBool = @(x) islogical(x);
     validCell = @(x) iscell(x);
-    addRequired(parser, 'fileNames', defaultFileNames, validCell);
-    addRequired(parser, 'noDrop', validBool);
-    parse(parser, fileNames, noDrop);
+    addRequired(parser, 'fileNames', validCell);
+    addParameter(parser, 'noDrop', defaultNoDrop, validBool);
+    parse(parser, varargin{:});
     fileNames = parser.Results.fileNames;
     noDrop = parser.Results.noDrop;
     
@@ -32,7 +30,7 @@ function processWrapper(fileNames, noDrop)
                 batchNum, pos_snout{j});
         % Do the second analysis step immediately
         disp('Done with HOG analysis, now doing post analysis step optimizeMotE.');
-        load(savename, 'links', 'energy')
+        load(savename)
         [scor, classifiedFrames, noClusters, scorList, clusterList] = ...
             optimizeMotE(energy, links);
         save(strcat('optimizeMotE_', savename, '.mat'), '-v7.3')
