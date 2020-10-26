@@ -3,5 +3,6 @@
 *.txt
 *.git
 *~*
-
+.DS_Store
+*.gitignore
 
