@@ -9,3 +9,7 @@ A tool to classify motor behavior from video recordings of the mouse face. See [
 * Run
 
   Add your file paths to the =fileNames= input cell when calling =processWrapper=. You will be prompted with a GUI loading the first frame of your video. Draw a ROI for the area of the face you wish to analyze. The second ROI was designed to specify the eye. Originally this is done for synchronisation, as our 2-P-IR laser beam will shine outwards through the eyes. Since the original setup uses an IR camera it's an easy way to determine the start of a recording. If you don't need that functionality specify ='noDrop=true'= when calling =processWrapper=. Then just draw your ROI anywhere and confirm with a double-click. 
+
+* Documentation
+
+  This was written as part of Tristan Wiessalla's master thesis at our group at EMBL. In-detail explanation of the code can be found in his thesis, especially in Appendix A. A more broad explanation can be found in chapter 6.
