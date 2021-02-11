@@ -1,11 +1,11 @@
 #+Title: FaceCat
 
-This is the pipeline I wrote for my Master Thesis in the Prevedel group at EMBL. It aims at extracting stereotyped patterns of facial movements from simple b/w webcam recordings of head-fixed mice.
+A tool to classify motor behavior from video recordings of the mouse face. See [link to bioRxiv] and [link to master thesis] for details. 
 
-** TODO Open Todos
-   1. [ ] Find a more objective way to determine the number of clusters per video
-      + currently, the number is determined after smoothing a tSNE plot of HOG vectors with a Gaussian kernel with the heuristic \sigma of 1.8
-   2. [ ] Enable the option to work on videos that don't have changing grayscale values in the eye (i.e. no IR laser recording of neural activity)
-   3. [ ] Train a CNN/ random forest classifier on FaceCat output and compare the performance on another video
-   4. [ ] =completePostAnalysis= : move windowSize array to options set by user, let it operate based on the musall-type cluster estimate
-   5. [ ] =batchExtract_hog= : move sd parameter to options set by user
+* Installation
+
+  Simply clone the repository to a destination of your choice and run it from there. You require MATLAB2018b to run. The code relies onthe following packages: Image Processing Toolbox 11.1, Statistics and Machine LearningToolbox 11.7, Computer Vision Toolbox 9.2, Parallel Computing Toolbox 7.2, MATLABParallel Server 7.2.
+
+* Run
+
+  
