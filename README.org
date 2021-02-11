@@ -13,3 +13,7 @@ A tool to classify motor behavior from video recordings of the mouse face. See [
 * Documentation
 
   This was written as part of Tristan Wiessalla's master thesis at our group at EMBL. In-detail explanation of the code can be found in his thesis, especially in Appendix A. A more broad explanation can be found in chapter 6.
+
+* License 
+  
+  See [[https://creativecommons.org/licenses/by-nc-sa/4.0/]] for details.
