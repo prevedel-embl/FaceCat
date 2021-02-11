@@ -1,11 +1,11 @@
 #+Title: FaceCat
 
-A tool to classify motor behavior from video recordings of the mouse face. See [link to bioRxiv] and [link to master thesis] for details. 
+A tool to classify motor behavior from video recordings of the mouse face. See [link to bioRxiv] and [link to master thesis] for details. All steps from the watershed clustering algorithm are taken from /Berman et al. 2014 “Mapping the stereotyped behaviour of freely-moving fruit flies”/: [[https://github.com/gordonberman/MotionMapper][Repository]], [[https://royalsocietypublishing.org/doi/full/10.1098/rsif.2014.0672][Publication]]. The HOG generation parameters & code logic follows /Dolensek et al. 20202 "Facial expressions of emotion states and their neuronal correlates in mice"/: [[https://science.sciencemag.org/content/368/6486/89.abstract][Publication]]. Their GitHub repository can be found [[https://github.com/GogollaLab/MouseFacialExpressionAnalysis][here]], but full code is only on zenodo.
 
 * Installation
 
-  Simply clone the repository to a destination of your choice and run it from there. You require MATLAB2018b to run. The code relies onthe following packages: Image Processing Toolbox 11.1, Statistics and Machine LearningToolbox 11.7, Computer Vision Toolbox 9.2, Parallel Computing Toolbox 7.2, MATLABParallel Server 7.2.
+  Simply clone the repository to a destination of your choice and run it from there. You require MATLAB2018b to run. The code relies onthe following packages: Image Processing Toolbox 11.1, Statistics and Machine LearningToolbox 11.7, Computer Vision Toolbox 9.2, Parallel Computing Toolbox 7.2, MATLABParallel Server 7.2. Tested file type for the videos is *.mp4.
 
 * Run
 
-  
+  Add your file paths to the =fileNames= input cell when calling =processWrapper=. You will be prompted with a GUI loading the first frame of your video. Draw a ROI for the area of the face you wish to analyze. The second ROI was designed to specify the eye. Originally this is done for synchronisation, since the 2-P-IR laser beam will shine outwards through the eyes. Since the original setup uses an IR camera it's an easy way to determine the start of a recording. If you don't need that functionality specify ='noDrop=true'= when calling =processWrapper=. Then just draw your ROI anywhere and confirm with a double-click. 
