@@ -19,7 +19,7 @@ function processWrapper(varargin)
         grayValue = measureGrayValue(video_path, pos_eye{j});
         % 
         if noDrop==true
-            grayValue = ones(len(grayValue), 1);
+            grayValue = ones(length(grayValue), 1);
         end
         [laserSwitchOn_idcs, laserSwitchOff_idcs] = extractRecordedFramesIdcs(grayValue);
 
